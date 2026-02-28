@@ -200,6 +200,7 @@ nav.stuck {
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   overflow: hidden;
+  padding-top: 4rem;
 }
 #hc { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
 .hi { position: relative; z-index: 2; text-align: center; padding: 0 5vw; }
