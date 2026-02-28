@@ -151,7 +151,7 @@ SM.add('menu', document.querySelector('#menu'), () => {
   const kills=[];
   [{id:'mc1',bg:0x0a1020,c:0x1A3868,a:0x4A90D9,tp:'vessel'},
    {id:'mc2',bg:0x081222,c:0x1A2868,a:0x88C4FF,tp:'torus'},
-   {id:'mc3',bg:0x091425,c:0x1A3555,a:0x6BB3F0,tp:'icosa'},
+   /* mc3 removed for static image */
    {id:'mc4',bg:0x0a1222,c:0x1A2858,a:0x60B0FF,tp:'sphere'},
    {id:'mc5',bg:0x061228,c:0x0C2A5A,a:0x60B8F0,tp:'octa'},
    {id:'mc6',bg:0x0a1520,c:0x1A3058,a:0x5CA0E8,tp:'knot'}
