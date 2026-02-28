@@ -42,8 +42,13 @@ const SM = (() => {
 /* ── Dispose helper ── */
 function disposeR(r) {
   if (!r) return;
+  const c = r.domElement;
   r.dispose();
   if (r.forceContextLoss) r.forceContextLoss();
+  if (c && c.parentElement) {
+    const clone = c.cloneNode();
+    c.replaceWith(clone);
+  }
 }
 
 
@@ -98,7 +103,7 @@ SM.add('hero', $('#hc') && $('#hc').parentElement, () => {
   const onRz=()=>{rend.setSize(W(),H());cam.aspect=W()/H();cam.updateProjectionMatrix();bg.material.uniforms.uR.value.set(W(),H());};
   window.addEventListener('resize',onRz);
   return{kill(){cancelAnimationFrame(raf);window.removeEventListener('resize',onRz);disposeR(rend);}};
-}, { keepAlive: true });
+});
 
 // ════════════════════════════════════════
 // ABOUT — Animated Andean Vessel
