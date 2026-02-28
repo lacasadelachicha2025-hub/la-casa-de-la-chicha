@@ -12,7 +12,37 @@ document.addEventListener('mousemove', e => { MX = e.clientX; MY = e.clientY; })
 
 // Three.js — Renderer factory
 function mkR(c, a = true) {
-  const r = new THREE.WebGLRenderer({ canvas: c, alpha: a, antialias: true });
+  if (!c) throw new Error('Canvas no disponible para inicializar WebGLRenderer');
+
+  const baseAttrs = {
+    alpha: a,
+    antialias: true,
+    powerPreference: 'high-performance',
+    preserveDrawingBuffer: false,
+  };
+
+  let gl =
+    c.getContext('webgl2', baseAttrs) ||
+    c.getContext('webgl', baseAttrs) ||
+    c.getContext('experimental-webgl', baseAttrs);
+
+  if (!gl) {
+    const fallbackAttrs = { ...baseAttrs, antialias: false };
+    gl =
+      c.getContext('webgl2', fallbackAttrs) ||
+      c.getContext('webgl', fallbackAttrs) ||
+      c.getContext('experimental-webgl', fallbackAttrs);
+  }
+
+  if (!gl) throw new Error('No se pudo crear contexto WebGL (límite de contextos o WebGL deshabilitado)');
+
+  const r = new THREE.WebGLRenderer({
+    canvas: c,
+    context: gl,
+    alpha: a,
+    antialias: gl.getContextAttributes?.().antialias ?? false,
+    powerPreference: 'high-performance'
+  });
   r.setPixelRatio(Math.min(devicePixelRatio, 2));
   return r;
 }

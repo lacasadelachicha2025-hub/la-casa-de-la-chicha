@@ -39,7 +39,11 @@ const SM = (() => {
 })();
 
 /* ── Dispose helper ── */
-function disposeR(r) { r.dispose(); r.forceContextLoss(); }
+function disposeR(r) {
+  if (!r) return;
+  r.dispose();
+  if (r.forceContextLoss) r.forceContextLoss();
+}
 
 
 // ════════════════════════════════════════
