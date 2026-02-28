@@ -218,19 +218,19 @@ nav.stuck {
 }
 .h1l .h1i { display: block; transform: translateY(105%); }
 .h1l:nth-child(1) .h1i { 
-  font-size: clamp(3.5rem, 11vw, 11rem); 
+  font-size: clamp(3rem, 9vw, 8rem); 
   line-height: .9;
 }
 .h1l:nth-child(2) .h1i {
-  font-size: clamp(2rem, 5.5vw, 4.5rem);
+  font-size: clamp(1.8rem, 4.5vw, 3.5rem);
   color: var(--gold);
   font-style: italic;
   font-family: var(--fB);
   line-height: 1.4;
-  padding: .6rem 0;
+  padding: .4rem 0;
 }
 .h1l:nth-child(3) .h1i {
-  font-size: clamp(3.5rem, 11vw, 11rem);
+  font-size: clamp(3rem, 9vw, 8rem);
   -webkit-text-stroke: 1px rgba(224,236,248,.25);
   color: transparent;
   line-height: .9;
