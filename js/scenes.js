@@ -18,10 +18,10 @@ const SM = (() => {
     });
   }, { rootMargin: '400px 0px' });
 
-  function add(id, el, factory) {
+  function add(id, el, factory, opts = {}) {
     if (!el) return;
     el.dataset.sid = id;
-    reg.set(id, { factory, inst: null });
+    reg.set(id, { factory, inst: null, keepAlive: !!opts.keepAlive });
     obs.observe(el);
   }
   function init(id) {
@@ -32,6 +32,7 @@ const SM = (() => {
   function kill(id) {
     const s = reg.get(id);
     if (!s || !s.inst) return;
+    if (s.keepAlive) return;
     if (s.inst.kill) s.inst.kill();
     s.inst = null;
   }
@@ -97,7 +98,7 @@ SM.add('hero', $('#hc') && $('#hc').parentElement, () => {
   const onRz=()=>{rend.setSize(W(),H());cam.aspect=W()/H();cam.updateProjectionMatrix();bg.material.uniforms.uR.value.set(W(),H());};
   window.addEventListener('resize',onRz);
   return{kill(){cancelAnimationFrame(raf);window.removeEventListener('resize',onRz);disposeR(rend);}};
-});
+}, { keepAlive: true });
 
 // ════════════════════════════════════════
 // ABOUT — Animated Andean Vessel
