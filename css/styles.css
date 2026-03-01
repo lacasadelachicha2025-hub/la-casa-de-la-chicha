@@ -5,20 +5,20 @@
 
 /* ──────────────── VARIABLES & TOKENS ──────────────── */
 :root {
-  /* Paleta "Azul Rey Oscuro y Blanco" */
-  --bg: #001a4d;
-  /* Azul rey muy oscuro */
-  --bg2: #002b80;
-  /* Azul oscuro variante */
-  --bg3: #003cb3;
+  /* Paleta "Azul Rey Medio" */
+  --bg: #1c49b8;
+  /* Azul rey medio */
+  --bg2: #2563eb;
+  /* Azul medio claro */
+  --bg3: #3b82f6;
 
   --gold: #ffffff;
   /* Elementos en blanco */
   --gold2: #e6f0ff;
 
-  --rust: #001133;
-  /* Azul profundo para sombras */
-  --rust2: #001f4d;
+  --rust: #1e3a8a;
+  /* Azul para sombras */
+  --rust2: #1e40af;
 
   --parch: #ffffff;
   /* Texto Blanco */
@@ -2986,13 +2986,10 @@ footer {
   color: white !important;
 }
 
-. c i m g    {
-     w i d t h :    1 0 0 % ;
-     h e i g h t :    1 0 0 % ;
-     o b j e c t - f i t :    c o v e r ;
-     b o r d e r - r a d i u s :    4 p x ;
-     o p a c i t y :    0 . 9 ;
-     
+.cimg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  opacity: 0.9;
 }
-
-     
