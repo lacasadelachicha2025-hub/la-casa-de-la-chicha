@@ -53,14 +53,15 @@ function disposeR(r) {
 
 
 // ════════════════════════════════════════
-// HERO — Nebula Galaxy with GLSL bg
+// HERO — Nebula Galaxy with GLSL bg (WARM CHICHA VERSION)
 // ════════════════════════════════════════
 SM.add('hero', $('#hc') && $('#hc').parentElement, () => {
   const cv=$('#hc'),P=cv.parentElement;
   const W=()=>P.offsetWidth,H=()=>P.offsetHeight;
   const rend=mkR(cv,false);rend.setSize(W(),H());
-  rend.toneMapping=THREE.ACESFilmicToneMapping;rend.toneMappingExposure=1.1;
+  rend.toneMapping=THREE.ACESFilmicToneMapping;rend.toneMappingExposure=1.05;
   const scene=new THREE.Scene(),cam=mkC(65,W(),H(),5);
+  // NEW WARM SHADER
   const bg=new THREE.Mesh(new THREE.PlaneGeometry(2,2),new THREE.ShaderMaterial({
     uniforms:{uT:{value:0},uR:{value:new THREE.Vector2(W(),H())}},
     vertexShader:`void main(){gl_Position=vec4(position.xy,0.,1.);}`,
@@ -71,9 +72,14 @@ SM.add('hero', $('#hc') && $('#hc').parentElement, () => {
       void main(){
         vec2 uv=gl_FragCoord.xy/uR,c=uv-.5;c.x*=uR.x/uR.y;
         float d=length(c);
-        float ns=n(c*3.+uT*.08)*n(c*6.-uT*.05)*n(c*1.5+uT*.12);
-        vec3 col=mix(vec3(.04,.06,.14),mix(vec3(.08,.20,.42),vec3(.18,.38,.62),smoothstep(.2,.7,ns)),smoothstep(.5,.0,d+ns*.3));
-        col*=1.-d*.6;gl_FragColor=vec4(col,1.);
+        float ns=n(c*2.5+uT*.06)*n(c*5.-uT*.04)*n(c*1.2+uT*.1);
+        // Colores: Fondo Crema Oscuro -> Canela -> Caramelo Brillante
+        vec3 c1 = vec3(.15, .08, .05); // Marrón muy oscuro (fondo profundo)
+        vec3 c2 = vec3(.55, .27, .07); // Canela / Caramelo medio
+        vec3 c3 = vec3(.95, .85, .70); // Crema / Espuma
+        vec3 col=mix(c1,mix(c2,c3,smoothstep(.2,.7,ns)),smoothstep(.5,.0,d+ns*.3));
+        col*=1.-d*.5; // Viñeta suave
+        gl_FragColor=vec4(col,1.);
       }
     `,depthWrite:false,depthTest:false
   }));
@@ -82,7 +88,10 @@ SM.add('hero', $('#hc') && $('#hc').parentElement, () => {
   function mL(cnt,sz,ca,cb,sp){
     const g=new THREE.BufferGeometry(),p=new Float32Array(cnt*3),col=new Float32Array(cnt*3);
     const sc=document.createElement('canvas');sc.width=sc.height=64;const ctx=sc.getContext('2d');
-    const gr=ctx.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.4,'rgba(255,255,255,.5)');gr.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,64,64);
+    const gr=ctx.createRadialGradient(32,32,0,32,32,32);
+    // Partículas cálidas (blanco a transparente)
+    gr.addColorStop(0,'rgba(255,250,240,1)');gr.addColorStop(.4,'rgba(255,240,220,.5)');gr.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=gr;ctx.fillRect(0,0,64,64);
     const cA=new THREE.Color(ca),cB=new THREE.Color(cb);
     for(let i=0;i<cnt;i++){
       const th=Math.random()*Math.PI*2,ph=Math.acos(2*Math.random()-1),r=Math.pow(Math.random(),.45)*sp;
@@ -92,11 +101,34 @@ SM.add('hero', $('#hc') && $('#hc').parentElement, () => {
     g.setAttribute('position',new THREE.BufferAttribute(p,3));g.setAttribute('color',new THREE.BufferAttribute(col,3));
     return new THREE.Points(g,new THREE.PointsMaterial({size:sz,map:new THREE.CanvasTexture(sc),vertexColors:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));
   }
-  const L1=mL(3500,.055,0x4A90D9,0x1A3A6B,4),L2=mL(1500,.04,0xE0ECF8,0x4A90D9,5),L3=mL(600,.08,0x2E5DA8,0x4A90D9,2.5);
+  
+  // PARTICULAS: Canela, Oro, Crema
+  const L1=mL(3500,.045,0xD2691E,0x8B4513,4.5); // Canela y Marrón
+  const L2=mL(1500,.035,0xFFF8E7,0xF4A460,5.5); // Crema y Arena
+  const L3=mL(600,.07,0xCD853F,0xFFD700,3);     // Dorado y Bronce
   scene.add(L1,L2,L3);
-  for(let i=0;i<5;i++){const cc=document.createElement('canvas');cc.width=cc.height=256;const ct=cc.getContext('2d');const cg=ct.createRadialGradient(128,128,0,128,128,128);const col=i%2===0?'rgba(139,58,16,':'rgba(201,161,74,';cg.addColorStop(0,col+'.1)');cg.addColorStop(1,col+'0)');ct.fillStyle=cg;ct.fillRect(0,0,256,256);const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cc),transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));sp.scale.set(6+Math.random()*4,4+Math.random()*3,1);sp.position.set((Math.random()-.5)*8,(Math.random()-.5)*5,(Math.random()-.5)*2-3);scene.add(sp);}
+
+  // Floating "Bubbles" or "Spices" (Replacing sprites loop)
+  for(let i=0;i<6;i++){
+    const cc=document.createElement('canvas');cc.width=cc.height=256;const ct=cc.getContext('2d');
+    const cg=ct.createRadialGradient(128,128,0,128,128,128);
+    // Gas/Nebula colors: Naranja/Dorado suave
+    const col=i%2===0?'rgba(210,105,30,':'rgba(255,215,0,'; 
+    cg.addColorStop(0,col+'.08)');cg.addColorStop(1,col+'0)');
+    ct.fillStyle=cg;ct.fillRect(0,0,256,256);
+    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cc),transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));
+    sp.scale.set(6+Math.random()*4,4+Math.random()*3,1);
+    sp.position.set((Math.random()-.5)*8,(Math.random()-.5)*5,(Math.random()-.5)*2-3);
+    scene.add(sp);
+  }
+
   let t=0,raf;
-  (function a(){t+=.005;bg.material.uniforms.uT.value=t;L1.rotation.y=t*.04;L1.rotation.x=Math.sin(t*.05)*.08;L2.rotation.y=-t*.03;L3.rotation.y=t*.07;
+  (function a(){
+    t+=.004; // Slower, creamy movement
+    bg.material.uniforms.uT.value=t;
+    L1.rotation.y=t*.03;L1.rotation.x=Math.sin(t*.04)*.06;
+    L2.rotation.y=-t*.02;
+    L3.rotation.y=t*.05;
     cam.position.x+=((MX/innerWidth-.5)*.5-cam.position.x)*.03;
     cam.position.y+=((MY/innerHeight-.5)*-.35-cam.position.y)*.03;
     cam.lookAt(0,0,0);raf=requestAnimationFrame(a);rend.render(scene,cam);})();
