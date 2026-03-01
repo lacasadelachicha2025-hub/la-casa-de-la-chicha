@@ -206,8 +206,10 @@ nav.stuck {
   align-items: center; justify-content: center;
   overflow: hidden;
   padding-top: 4rem;
+  /* Fondo estatico limpio y elegante estilo Chicha */
+  background: radial-gradient(circle at 50% 30%, var(--bg2), var(--bg));
 }
-#hc { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+/* #hc { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; } Eliminado */
 .hi { position: relative; z-index: 2; text-align: center; padding: 0 5vw; }
 .hey {
   display: inline-flex; align-items: center; gap: .9rem;
