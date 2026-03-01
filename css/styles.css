@@ -2896,8 +2896,8 @@ footer {
   }
 }
 
-/* ──────────────── FLOATING FOOD ANIMATIONS ──────────────── */
-.floating-items {
+/* ──────────────── PROFESSIONAL AURORA BACKGROUND ANIMATION ──────────────── */
+.aurora-bg {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -2905,71 +2905,56 @@ footer {
   overflow: hidden;
 }
 
-.float-item {
+.aurora-blob {
   position: absolute;
-  font-size: 2.5rem;
-  opacity: 0.6;
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
-  animation: floatUp 15s linear infinite;
-  -webkit-text-stroke: 0 !important;
-  text-stroke: 0 !important;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
+  animation: auroraMove 20s infinite alternate ease-in-out;
+  mix-blend-mode: hard-light;
 }
 
-.fi-1 {
-  left: 10%;
-  bottom: -10%;
-  animation-duration: 18s;
-  animation-delay: 0s;
-}
-
-.fi-2 {
-  left: 80%;
-  bottom: -10%;
-  animation-duration: 22s;
-  animation-delay: 2s;
-  font-size: 3rem;
-}
-
-.fi-3 {
-  left: 30%;
-  bottom: -10%;
-  animation-duration: 16s;
-  animation-delay: 4s;
-  font-size: 2rem;
-}
-
-.fi-4 {
-  left: 60%;
-  bottom: -10%;
-  animation-duration: 20s;
-  animation-delay: 1s;
-  font-size: 3.5rem;
-}
-
-.fi-5 {
-  left: 45%;
-  bottom: -10%;
+.a-blob-1 {
+  width: 600px;
+  height: 600px;
+  background: var(--bg2);
+  top: -100px;
+  left: -200px;
   animation-duration: 25s;
-  animation-delay: 5s;
 }
 
-@keyframes floatUp {
+.a-blob-2 {
+  width: 500px;
+  height: 500px;
+  background: var(--bg3);
+  bottom: -150px;
+  right: -50px;
+  animation-duration: 22s;
+  animation-delay: -5s;
+}
+
+.a-blob-3 {
+  width: 450px;
+  height: 450px;
+  background: var(--rust2);
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation-duration: 28s;
+  animation-delay: -10s;
+}
+
+@keyframes auroraMove {
   0% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 0;
+    transform: translate(0, 0) scale(1) rotate(0deg);
   }
 
-  10% {
-    opacity: 0.6;
-  }
-
-  90% {
-    opacity: 0.6;
+  50% {
+    transform: translate(150px, 80px) scale(1.1) rotate(180deg);
   }
 
   100% {
-    transform: translateY(-120vh) rotate(360deg);
-    opacity: 0;
+    transform: translate(-100px, -150px) scale(0.9) rotate(360deg);
   }
 }
 
