@@ -513,6 +513,12 @@ nav.stuck {
 .dc:hover::before { transform: scaleX(1); }
 .cv { height: 200px; position: relative; overflow: hidden; }
 .cv canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
+.cimg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform .6s var(--ease);
+}
+.dc:hover .cimg { transform: scale(1.1); }
 .cgl {
   position: absolute; inset: 0;
   background: linear-gradient(to top, var(--bg2), transparent 50%);
