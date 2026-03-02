@@ -5,20 +5,20 @@
 
 /* ──────────────── VARIABLES & TOKENS ──────────────── */
 :root {
-  /* Paleta "Azul Rey Medio" */
-  --bg: #1c49b8;
-  /* Azul rey medio */
-  --bg2: #2563eb;
-  /* Azul medio claro */
-  --bg3: #3b82f6;
+  /* Paleta "Azul Rey Medio-Claro" */
+  --bg: #2556c7;
+  /* Azul rey medio-claro */
+  --bg2: #3370e8;
+  /* Azul claro */
+  --bg3: #4a8df7;
 
   --gold: #ffffff;
   /* Elementos en blanco */
   --gold2: #e6f0ff;
 
-  --rust: #1e3a8a;
+  --rust: #2050a8;
   /* Azul para sombras */
-  --rust2: #1e40af;
+  --rust2: #2858c0;
 
   --parch: #ffffff;
   /* Texto Blanco */
