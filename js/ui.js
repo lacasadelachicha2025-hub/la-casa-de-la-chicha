@@ -397,3 +397,51 @@ function showToast(icon, text) {
     }
   }, { passive: true });
 })();
+
+// ──────────────── 11. IMAGE LOADING OPTIMIZATION ────────────────
+(function () {
+  const imgs = $$('img');
+  imgs.forEach((img, idx) => {
+    if (idx > 2) img.loading = 'lazy';
+    img.decoding = 'async';
+  });
+})();
+
+// ──────────────── 12. FAQ ACCESSIBILITY ATTRIBUTES ────────────────
+(function () {
+  $$('.faq-item').forEach((item, i) => {
+    const btn = item.querySelector('.faq-q');
+    const panel = item.querySelector('.faq-a');
+    if (!btn || !panel) return;
+    const panelId = `faq-panel-${i + 1}`;
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-controls', panelId);
+    panel.id = panelId;
+    panel.setAttribute('role', 'region');
+    panel.setAttribute('aria-hidden', 'true');
+  });
+
+  $$('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      const panel = item.querySelector('.faq-a');
+      if (panel) panel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    });
+  });
+})();
+
+// ──────────────── 13. NEWSLETTER FORM ────────────────
+(function () {
+  const form = $('#newsletterForm');
+  if (!form) return;
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const input = $('#newsletterEmail');
+    const email = (input?.value || '').trim();
+    if (!email) return;
+    showToast('📩', `<strong>${email}</strong> suscrito correctamente`);
+    form.reset();
+  });
+})();
