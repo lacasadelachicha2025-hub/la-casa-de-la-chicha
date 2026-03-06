@@ -2,15 +2,20 @@
    UI — Loader, Cursor, Navigation, Scroll, Forms, Interactions
    ═══════════════════════════════════════════════════════════════ */
 
-// ──────────────── LOADER ────────────────
-window.addEventListener('load', () => {
-  setTimeout(() => {
+// ──────────────── LOADER (carga real + minimo visual) ────────────────
+(function () {
+  let loaded = false, minTime = false;
+  function dismiss() {
+    if (!loaded || !minTime) return;
     const L = $('#loader');
+    if (!L) return;
     L.style.transition = 'clip-path 1.1s cubic-bezier(.77,0,.18,1)';
     L.style.clipPath = 'polygon(0 0,100% 0,100% 0,0 0)';
     setTimeout(() => L.remove(), 1200);
-  }, 2800);
-});
+  }
+  window.addEventListener('load', () => { loaded = true; dismiss(); });
+  setTimeout(() => { minTime = true; dismiss(); }, 1800);
+})();
 
 // ──────────────── SCROLL PROGRESS + NAV ────────────────
 window.addEventListener('scroll', () => {
@@ -107,15 +112,62 @@ ms.addEventListener('mousemove', e => {
 $('#mL').addEventListener('click', () => ms.scrollBy({ left: -360, behavior: 'smooth' }));
 $('#mR').addEventListener('click', () => ms.scrollBy({ left: 360, behavior: 'smooth' }));
 
-// ──────────────── RESERVATION FORM ────────────────
+// ──────────────── MENU CAROUSEL INDICATORS ────────────────
+(function () {
+  const strip = $('#ms');
+  const cards = $$('#ms .dc');
+  if (!strip || cards.length === 0) return;
+  const nav = strip.closest('#menu');
+  const indWrap = document.createElement('div');
+  indWrap.className = 'menu-indicators';
+  cards.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'menu-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Ir a producto ' + (i + 1));
+    dot.addEventListener('click', () => {
+      cards[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+    });
+    indWrap.appendChild(dot);
+  });
+  const mnav = nav.querySelector('.mnav');
+  if (mnav) mnav.before(indWrap);
+  else nav.appendChild(indWrap);
+
+  strip.addEventListener('scroll', () => {
+    const sl = strip.scrollLeft;
+    const cw = cards[0].offsetWidth + 2;
+    const idx = Math.round(sl / cw);
+    indWrap.querySelectorAll('.menu-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+  }, { passive: true });
+})();
+
+// ──────────────── RESERVATION FORM (con validación visual) ────────────────
 function sndR(e) {
   e.preventDefault();
+  const form = e.target;
+  let valid = true;
+  form.querySelectorAll('.ff').forEach(ff => {
+    const input = ff.querySelector('.fi, .fs');
+    ff.classList.remove('has-error');
+    const existing = ff.querySelector('.form-error');
+    if (existing) existing.remove();
+    if (input && !input.value.trim()) {
+      valid = false;
+      ff.classList.add('has-error');
+      const err = document.createElement('span');
+      err.className = 'form-error';
+      err.textContent = 'Este campo es requerido';
+      ff.appendChild(err);
+    }
+  });
+  if (!valid) return;
   const b = $('#sb');
   b.classList.add('sent');
   b.textContent = '✓ ¡Reserva Confirmada!';
   setTimeout(() => {
     b.classList.remove('sent');
     b.textContent = 'Confirmar Reserva →';
+    form.querySelectorAll('.ff').forEach(ff => ff.classList.remove('has-error'));
   }, 4000);
 }
 
@@ -443,5 +495,84 @@ function showToast(icon, text) {
     if (!email) return;
     showToast('📩', `<strong>${email}</strong> suscrito correctamente`);
     form.reset();
+  });
+})();
+
+// ──────────────── 14. HAMBURGER MENU ────────────────
+(function () {
+  const btn = $('#hamburger');
+  const links = $('.nlinks');
+  if (!btn || !links) return;
+  btn.addEventListener('click', () => {
+    const open = btn.classList.toggle('open');
+    links.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  links.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      btn.classList.remove('open');
+      links.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+})();
+
+// ──────────────── 15. NAV ACTIVE LINK ON SCROLL ────────────────
+(function () {
+  const navLinks = $$('.nlinks a[href^="#"]');
+  const sections = navLinks.map(a => $(a.getAttribute('href'))).filter(Boolean);
+  if (!sections.length) return;
+  const navObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const link = navLinks.find(a => a.getAttribute('href') === '#' + e.target.id);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(s => navObs.observe(s));
+})();
+
+// ──────────────── 16. GALLERY LIGHTBOX ────────────────
+(function () {
+  const lb = $('#lightbox');
+  const lbImg = $('#lbImg');
+  const lbCaption = $('#lbCaption');
+  if (!lb || !lbImg) return;
+  const items = $$('#gallery .mi');
+  if (!items.length) return;
+  let current = 0;
+
+  function openLB(idx) {
+    current = idx;
+    const img = items[idx].querySelector('.g-img');
+    const label = items[idx].querySelector('.mil');
+    if (!img) return;
+    lbImg.src = img.src;
+    lbImg.alt = img.alt || '';
+    lbCaption.textContent = label ? label.textContent : '';
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLB() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function prevLB() { openLB((current - 1 + items.length) % items.length); }
+  function nextLB() { openLB((current + 1) % items.length); }
+
+  items.forEach((mi, i) => mi.addEventListener('click', () => openLB(i)));
+  $('#lbClose').addEventListener('click', closeLB);
+  $('#lbPrev').addEventListener('click', prevLB);
+  $('#lbNext').addEventListener('click', nextLB);
+  lb.addEventListener('click', e => { if (e.target === lb) closeLB(); });
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLB();
+    if (e.key === 'ArrowLeft') prevLB();
+    if (e.key === 'ArrowRight') nextLB();
   });
 })();

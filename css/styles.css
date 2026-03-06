@@ -4597,3 +4597,226 @@ footer {
   .map-frame iframe { min-height: 300px; }
   .news-form { flex-direction: column; align-items: stretch; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   UX IMPROVEMENTS
+   ══════════════════════════════════════════════════════════════ */
+
+/* ──────────────── SCROLL-MARGIN-TOP ──────────────── */
+section[id] {
+  scroll-margin-top: 90px;
+}
+
+/* ──────────────── HAMBURGER MENU ──────────────── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px;
+  cursor: pointer;
+  z-index: 600;
+  background: none;
+  border: none;
+}
+.ham-line {
+  width: 24px;
+  height: 2px;
+  background: var(--parch);
+  transition: transform .3s var(--ease), opacity .3s;
+}
+.hamburger.open .ham-line:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger.open .ham-line:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open .ham-line:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+@media (max-width: 960px) {
+  .hamburger { display: flex; }
+  .nlinks {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(30, 60, 160, 0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5rem;
+    z-index: 550;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .4s var(--ease);
+  }
+  .nlinks.open {
+    display: flex;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .nlinks.open a {
+    font-size: 1rem;
+    color: var(--parch);
+    letter-spacing: .3em;
+  }
+  [data-theme="light"] .nlinks {
+    background: rgba(245, 240, 232, 0.97);
+  }
+}
+
+/* ──────────────── NAV ACTIVE LINK ──────────────── */
+.nlinks a.active {
+  color: var(--gold);
+}
+.nlinks a.active::after {
+  width: 100%;
+}
+
+/* ──────────────── LIGHTBOX ──────────────── */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10500;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .4s var(--ease);
+}
+.lightbox.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.lb-img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  transform: scale(0.9);
+  transition: transform .4s var(--ease);
+}
+.lightbox.open .lb-img {
+  transform: scale(1);
+}
+.lb-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .3s;
+  z-index: 2;
+}
+.lb-close:hover { background: rgba(255,255,255,0.25); }
+.lb-prev, .lb-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .3s;
+  z-index: 2;
+}
+.lb-prev { left: 1.5rem; }
+.lb-next { right: 1.5rem; }
+.lb-prev:hover, .lb-next:hover { background: rgba(255,255,255,0.2); }
+.lb-caption {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--fB);
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.8);
+  text-align: center;
+  padding: 0.5rem 1.5rem;
+  background: rgba(0,0,0,0.5);
+  border-radius: 8px;
+}
+@media (max-width: 600px) {
+  .lb-prev, .lb-next { width: 38px; height: 38px; font-size: 1.4rem; }
+  .lb-prev { left: 0.5rem; }
+  .lb-next { right: 0.5rem; }
+}
+
+/* ──────────────── FORM VALIDATION ──────────────── */
+.fi:invalid:not(:placeholder-shown),
+.fa:invalid:not(:placeholder-shown) {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.15);
+}
+.fi:valid:not(:placeholder-shown) {
+  border-color: rgba(46, 204, 113, 0.5);
+}
+.form-error {
+  font-family: var(--fM);
+  font-size: 0.6rem;
+  color: #e74c3c;
+  letter-spacing: 0.1em;
+  margin-top: 0.3rem;
+  display: none;
+}
+.ff.has-error .form-error { display: block; }
+.ff.has-error .fi,
+.ff.has-error .fs {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.15);
+}
+
+/* ──────────────── MENU CAROUSEL INDICATORS ──────────────── */
+.menu-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding: 0 5vw;
+}
+.menu-dot {
+  width: 24px;
+  height: 3px;
+  background: rgba(210, 105, 30, 0.2);
+  border: none;
+  cursor: pointer;
+  transition: all .3s var(--ease);
+  padding: 0;
+}
+.menu-dot.active {
+  background: var(--gold);
+  width: 40px;
+}
+
+/* ──────────────── FIX WHATSAPP / BACK-TOP OVERLAP ──────────────── */
+.back-top {
+  bottom: 6rem;
+}
+@media (max-width: 600px) {
+  .back-top {
+    bottom: 5rem;
+  }
+}
+
+/* ──────────────── GALLERY CURSOR HINT ──────────────── */
+.mi {
+  cursor: pointer;
+}
